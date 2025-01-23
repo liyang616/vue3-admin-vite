@@ -1,0 +1,22 @@
+{
+  "Vue3快速生成模板": {
+    "scope": "vue",
+    "prefix": "Vue3",
+    "body": [
+      "<template>",
+      "\t<div>test</div>",
+      "</template>\n",
+      "<script setup lang='ts'>",
+      "import { ref, getCurrentInstance } from 'vue'",
+      "const { proxy }: any = getCurrentInstance()",
+      "defineOptions({",
+      "\tname: ''",
+      "})\n",
+      "</script>\n",
+      "<style lang='scss' scoped>",
+      "@import url('./index.scss');",
+      "</style>\n"
+    ],
+    "description": "Vue3快速生成模板"
+  }
+}

@@ -1,0 +1,89 @@
+@use 'theme';
+@use 'transition';
+@use 'element-plus';
+@use 'sidebar';
+@use 'dark';
+
+/* 自定义全局 CssVar */
+:root {
+  /* 左侧菜单展开、收起动画时长 */
+  --pure-transition-duration: 0.3s;
+
+  /* 常用border-color 需要时可取用 */
+  --pure-border-color: rgb(5 5 5 / 6%);
+
+  /* switch关闭状态下的color 需要时可取用 */
+  --pure-switch-off-color: #a6a6a6;
+
+  /** 主题色 */
+  --pure-theme-sub-menu-active-text: initial;
+  --pure-theme-menu-bg: none;
+  --pure-theme-menu-hover: none;
+  --pure-theme-sub-menu-bg: transparent;
+  --pure-theme-menu-text: initial;
+  --pure-theme-sidebar-logo: none;
+  --pure-theme-menu-title-hover: initial;
+  --pure-theme-menu-active-before: transparent;
+}
+
+/* 灰色模式 */
+.html-grey {
+  filter: grayscale(100%);
+}
+
+/* 色弱模式 */
+.html-weakness {
+  filter: invert(80%);
+}
+
+// 搜索表单
+.search-form {
+  background: var(--el-bg-color);
+  padding: 18px 18px 0;
+  border-radius: 6px;
+  .el-input {
+    --el-input-width: 180px;
+  }
+}
+
+// 表格
+.pub-table {
+  width: 100%;
+  margin-top: 10px;
+  padding: 18px;
+  border-radius: 6px;
+  background: var(--el-bg-color);
+  .el-table th {
+    background: var(--el-fill-color-light) !important;
+    color: var(--el-text-color-primary) !important;
+  }
+}
+
+// 弹窗表单
+.pub-form {
+  .el-form-item {
+    margin: 0 0 18px !important;
+    padding: 0 10px;
+    .question {
+      display: flex;
+      align-items: center;
+      svg {
+        margin-left: 2px;
+        width: 16px;
+        height: 16px;
+        cursor: pointer;
+      }
+    }
+  }
+  .el-cascader,
+  .el-input-number,
+  .el-select {
+    width: 100%;
+  }
+  .w100 {
+    width: 100%;
+  }
+  .w50 {
+    width: 50%;
+  }
+}
