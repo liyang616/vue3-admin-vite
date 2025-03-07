@@ -20,9 +20,7 @@ import { useRoute } from 'vue-router'
 const route = useRoute()
 
 const showLogo = ref(
-  storageLocal().getItem<StorageConfigs>(
-    `${responsiveStorageNameSpace()}configure`
-  )?.showLogo ?? true
+  storageLocal().getItem<StorageConfigs>(`${responsiveStorageNameSpace()}configure`)?.showLogo ?? true
 )
 
 const {
@@ -50,10 +48,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div
-    v-loading="usePermissionStoreHook().wholeMenus.length === 0"
-    class="horizontal-header"
-  >
+  <div v-loading="usePermissionStoreHook().wholeMenus.length === 0" class="horizontal-header">
     <div v-if="showLogo" class="horizontal-header-left" @click="backTopMenu">
       <img :src="getLogo()" alt="logo" />
       <span>{{ title }}</span>
@@ -88,21 +83,20 @@ onMounted(() => {
         </span>
         <template #dropdown>
           <el-dropdown-menu class="logout">
+            <router-link to="/account">
+              <el-dropdown-item>
+                <IconifyIconOffline :icon="AccountSettingsIcon" style="margin: 5px" />
+                {{ $t('menus.pureAccountSettings') }}
+              </el-dropdown-item>
+            </router-link>
             <el-dropdown-item @click="logout">
-              <IconifyIconOffline
-                :icon="LogoutCircleRLine"
-                style="margin: 5px"
-              />
+              <IconifyIconOffline :icon="LogoutCircleRLine" style="margin: 5px" />
               {{ $t('buttons.pureLoginOut') }}
             </el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
-      <span
-        class="set-icon navbar-bg-hover"
-        :title="$t('buttons.pureOpenSystemSet')"
-        @click="onPanel"
-      >
+      <span class="set-icon navbar-bg-hover" :title="$t('buttons.pureOpenSystemSet')" @click="onPanel">
         <IconifyIconOffline :icon="Setting" />
       </span>
     </div>
