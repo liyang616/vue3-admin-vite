@@ -8,6 +8,12 @@ import { MotionPlugin } from '@vueuse/motion'
 import { createApp, type Directive } from 'vue'
 import { injectResponsiveStorage } from '@/utils/responsive'
 import * as echarts from 'echarts'
+const app = createApp(App)
+
+// viewer图片预览
+import Viewer from 'v-viewer'
+import 'viewerjs/dist/viewer.css'
+app.use(Viewer)
 
 // 引入重置样式
 import './style/reset.scss'
@@ -18,8 +24,6 @@ import './style/tailwind.css'
 // 导入字体图标
 import './assets/iconfont/iconfont.js'
 import './assets/iconfont/iconfont.css'
-
-const app = createApp(App)
 
 // api接口
 import { ApiPlugin } from '@/api/index'

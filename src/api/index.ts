@@ -9,6 +9,13 @@ const Api = {
       data
     })
   },
+  getUserInfo(params?: any) {
+    return http.request({
+      url: '/userInfo',
+      method: 'get',
+      params
+    })
+  },
   getAsyncRoutes(params?: any) {
     return http.request({
       url: '/get-async-routes',
@@ -21,6 +28,34 @@ const Api = {
       url: '/menu',
       method: 'post',
       data
+    })
+  },
+  getRole(data?: any) {
+    return http.request({
+      url: '/role',
+      method: 'post',
+      data
+    })
+  },
+  getUser(data?: any) {
+    return http.request({
+      url: '/user',
+      method: 'post',
+      data
+    })
+  },
+  getAllRole(params?: any) {
+    return http.request({
+      url: '/all-role',
+      method: 'get',
+      params
+    })
+  },
+  getAlioss(params?: any) {
+    return http.request({
+      url: '/alioss',
+      method: 'get',
+      params
     })
   }
 }

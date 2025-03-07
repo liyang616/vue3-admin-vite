@@ -1,12 +1,5 @@
 import { defineStore } from 'pinia'
-import {
-  type userType,
-  store,
-  router,
-  resetRouter,
-  routerArrays,
-  storageLocal
-} from '../utils'
+import { type userType, store, router, resetRouter, routerArrays, storageLocal } from '../utils'
 import { useMultiTagsStoreHook } from './multiTags'
 import { type DataInfo, setToken, removeToken, userKey } from '@/utils/auth'
 import { Api } from '@/api/index'
@@ -38,8 +31,7 @@ export const useUserStore = defineStore({
     // 页面级别权限
     roles: storageLocal().getItem<DataInfo<number>>(userKey)?.roles ?? [],
     // 按钮级别权限
-    permissions:
-      storageLocal().getItem<DataInfo<number>>(userKey)?.permissions ?? []
+    permissions: storageLocal().getItem<DataInfo<number>>(userKey)?.permissions ?? []
   }),
   actions: {
     /** 存储头像 */
@@ -67,7 +59,7 @@ export const useUserStore = defineStore({
       return new Promise<UserResult>((resolve, reject) => {
         Api.getLogin(data)
           .then((data?: any) => {
-            if (data?.success) setToken(data.data)
+            if (data?.code === 200) setToken(data.data)
             resolve(data)
           })
           .catch((error) => {

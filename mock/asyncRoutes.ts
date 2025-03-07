@@ -8,6 +8,7 @@ import { defineFakeRoute } from 'vite-plugin-fake-server/client'
  */
 const system = {
   path: '/system',
+  name: 'system',
   redirect: '/system/menu',
   meta: {
     title: '系统管理',
@@ -24,6 +25,28 @@ const system = {
         i18nKey: '',
         showParent: true,
         roles: ['admin', 'common'],
+        auths: ['btn_add', 'btn_edit', 'btn_delete']
+      }
+    },
+    {
+      path: '/system/role',
+      name: 'systemRole',
+      meta: {
+        title: '角色管理',
+        i18nKey: '',
+        showParent: true,
+        roles: ['admin', 'common'],
+        auths: ['btn_add', 'btn_edit', 'btn_delete']
+      }
+    },
+    {
+      path: '/system/user',
+      name: 'systemUser',
+      meta: {
+        title: '用户管理',
+        i18nKey: '',
+        showParent: true,
+        roles: ['admin'],
         auths: ['btn_add', 'btn_edit', 'btn_delete']
       }
     }
@@ -86,14 +109,14 @@ const docs = {
   ]
 }
 
-const apiUrl = 'https://hbykt.b1tech.cn/api'
+const apiUrl = 'https://vue3.admin.com/api'
 export default defineFakeRoute([
   {
     url: apiUrl + '/get-async-routes',
     method: 'get',
     response: () => {
       return {
-        success: true,
+        code: 200,
         data: [system, docs]
       }
     }

@@ -22,6 +22,16 @@ export default {
         i18nKey: 'menus.pureHome',
         showLink: VITE_HIDE_HOME === 'true' ? false : true
       }
+    },
+    {
+      path: '/account',
+      name: 'account',
+      component: () => import('@/views/welcome/account.vue'),
+      meta: {
+        title: '账户设置',
+        i18nKey: 'menus.pureAccountSettings',
+        showLink: false
+      }
     }
   ]
 } satisfies RouteConfigsTable

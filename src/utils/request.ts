@@ -65,10 +65,10 @@ class HttpRequest {
         }
 
         // 业务code
-        if (!data.success) {
+        if (data.code !== 200) {
           // 业务异常
           ElMessage({
-            message: data.message || 'Error',
+            message: data.msg || 'Error',
             type: 'error',
             duration: 3 * 1000
           })

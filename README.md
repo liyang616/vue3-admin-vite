@@ -5,9 +5,7 @@
 
 ## 鸣谢
 
-感谢 vue-pure-admin 作者大佬
-本项目是在 [vue-pure-admin](https://github.com/pure-admin/vue-pure-admin) 基础上按整合的精简版
-文档参考 [Pure Admin 保姆级文档](https://pure-admin.cn/pages/introduction/)
+感谢 vue-pure-admin 作者大佬，本项目是在 [vue-pure-admin](https://github.com/pure-admin/vue-pure-admin) 基础上按整合的精简版，文档参考 [Pure Admin 保姆级文档](https://pure-admin.cn/pages/introduction/)
 
 ### 安装依赖
 

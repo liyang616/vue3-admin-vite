@@ -10,8 +10,10 @@ declare module '*.scss' {
 }
 
 import { ComponentCustomProperties } from 'vue'
+import { Translator } from 'vue-i18n'
 declare module '@vue/runtime-core' {
   interface ComponentCustomProperties {
     $isMobile: boolean
+    $t: Translator
   }
 }

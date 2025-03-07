@@ -44,6 +44,9 @@
   .el-input {
     --el-input-width: 180px;
   }
+  .el-select {
+    width: 180px;
+  }
 }
 
 // 表格
@@ -56,6 +59,10 @@
   .el-table th {
     background: var(--el-fill-color-light) !important;
     color: var(--el-text-color-primary) !important;
+  }
+  .el-pagination {
+    margin-top: 16px;
+    justify-content: center;
   }
 }
 
@@ -85,5 +92,18 @@
   }
   .w50 {
     width: 50%;
+  }
+}
+
+// 账户设置
+.account-box {
+  background: var(--el-bg-color);
+  padding: 30px 30px 10px 18px;
+  border-radius: 6px;
+  .el-form-item__label {
+    width: 60px;
+  }
+  .submit {
+    margin: 0 auto;
   }
 }

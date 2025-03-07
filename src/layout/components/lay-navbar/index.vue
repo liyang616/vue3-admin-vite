@@ -38,10 +38,7 @@ const {
       @toggleClick="toggleSideBar"
     />
 
-    <LaySidebarBreadCrumb
-      v-if="layout !== 'mix' && device !== 'mobile'"
-      class="breadcrumb-container"
-    />
+    <LaySidebarBreadCrumb v-if="layout !== 'mix' && device !== 'mobile'" class="breadcrumb-container" />
 
     <LayNavMix v-if="layout === 'mix'" />
 
@@ -62,21 +59,20 @@ const {
         </span>
         <template #dropdown>
           <el-dropdown-menu class="logout">
+            <router-link to="/account">
+              <el-dropdown-item>
+                <IconifyIconOffline :icon="AccountSettingsIcon" style="margin: 5px" />
+                {{ $t('menus.pureAccountSettings') }}
+              </el-dropdown-item>
+            </router-link>
             <el-dropdown-item @click="logout">
-              <IconifyIconOffline
-                :icon="LogoutCircleRLine"
-                style="margin: 5px"
-              />
+              <IconifyIconOffline :icon="LogoutCircleRLine" style="margin: 5px" />
               {{ $t('buttons.pureLoginOut') }}
             </el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
-      <span
-        class="set-icon navbar-bg-hover"
-        :title="$t('buttons.pureOpenSystemSet')"
-        @click="onPanel"
-      >
+      <span class="set-icon navbar-bg-hover" :title="$t('buttons.pureOpenSystemSet')" @click="onPanel">
         <IconifyIconOffline :icon="Setting" />
       </span>
     </div>

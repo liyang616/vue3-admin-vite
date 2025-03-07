@@ -19,6 +19,7 @@
               :icon="scope.row.icon"
               width="16px"
               height="16px"
+              aria-hidden="false"
             />
             {{ scope.row.title }}
           </template>
@@ -58,8 +59,10 @@
       width="660"
       :close-on-click-modal="false"
       :fullscreen="$isMobile ? true : false"
+      @close="closeForm"
     >
       <el-form
+        ref="formRef"
         :model="form"
         :rules="formRules"
         :inline="$isMobile ? false : true"
@@ -133,7 +136,7 @@
                 content="值越大越靠后（只针对一级路由有效）"
                 placement="top"
               >
-                <IconifyIconOffline icon="ep:question-filled" />
+                <IconifyIconOffline icon="ep:question-filled" aria-hidden="false" />
               </el-tooltip>
             </div>
           </template>
@@ -146,21 +149,21 @@
               <el-tooltip
                 class="box-item"
                 effect="dark"
-                content="同个页面下的按钮权限标识必须保持唯一, 统一格式: permission:btn:xx"
+                content="同个页面下的按钮权限标识必须保持唯一, 统一格式: btn_xx"
                 placement="top"
               >
-                <IconifyIconOffline icon="ep:question-filled" />
+                <IconifyIconOffline icon="ep:question-filled" aria-hidden="false" />
               </el-tooltip>
             </div>
           </template>
-          <el-input v-model="form.auths" placeholder="格式: permission:btn:xx" />
+          <el-input v-model="form.auths" placeholder="格式: btn_xx" />
         </el-form-item>
         <el-form-item v-if="form.menuType == 0" :class="$isMobile ? 'w100' : 'w50'">
           <template #label>
             <div class="question">
               <span>路由重定向</span>
               <el-tooltip class="box-item" effect="dark" content="路由默认跳转的地址" placement="top">
-                <IconifyIconOffline icon="ep:question-filled" />
+                <IconifyIconOffline icon="ep:question-filled" aria-hidden="false" />
               </el-tooltip>
             </div>
           </template>
@@ -177,7 +180,7 @@
                 raw-content
                 placement="top"
               >
-                <IconifyIconOffline icon="ep:question-filled" />
+                <IconifyIconOffline icon="ep:question-filled" aria-hidden="false" />
               </el-tooltip>
             </div>
           </template>
@@ -194,7 +197,7 @@
                 raw-content
                 placement="top"
               >
-                <IconifyIconOffline icon="ep:question-filled" />
+                <IconifyIconOffline icon="ep:question-filled" aria-hidden="false" />
               </el-tooltip>
             </div>
           </template>
@@ -257,7 +260,7 @@
                 content="显示：父级菜单只有一个子菜单时候，会显示父级菜单"
                 placement="top"
               >
-                <IconifyIconOffline icon="ep:question-filled" />
+                <IconifyIconOffline icon="ep:question-filled" aria-hidden="false" />
               </el-tooltip>
             </div>
           </template>
@@ -276,7 +279,7 @@
                 content="缓存: 会保存该页面的整体状态，刷新后会清空状态"
                 placement="top"
               >
-                <IconifyIconOffline icon="ep:question-filled" />
+                <IconifyIconOffline icon="ep:question-filled" aria-hidden="false" />
               </el-tooltip>
             </div>
           </template>
@@ -295,7 +298,7 @@
                 content="允许: 当前菜单名称会显示在标签页"
                 placement="top"
               >
-                <IconifyIconOffline icon="ep:question-filled" />
+                <IconifyIconOffline icon="ep:question-filled" aria-hidden="false" />
               </el-tooltip>
             </div>
           </template>
@@ -314,7 +317,7 @@
                 content="固定: 当前菜单名称固定显示在标签页且不可以关闭"
                 placement="top"
               >
-                <IconifyIconOffline icon="ep:question-filled" />
+                <IconifyIconOffline icon="ep:question-filled" aria-hidden="false" />
               </el-tooltip>
             </div>
           </template>
@@ -333,7 +336,7 @@
                 content="语言国际化: language.xlsx里翻译对应的key"
                 placement="top"
               >
-                <IconifyIconOffline icon="ep:question-filled" />
+                <IconifyIconOffline icon="ep:question-filled" aria-hidden="false" />
               </el-tooltip>
             </div>
           </template>
@@ -374,31 +377,6 @@ const formRules = reactive({
   frameSrc: [{ required: true, message: '链接地址', trigger: 'blur' }]
 })
 
-let formDef = {
-  parentId: 0,
-  menuType: 0, // 菜单类型（0代表菜单、1代表iframe、2代表外链、3代表按钮）
-  title: '',
-  i18nKey: '', // 国际化语言key
-  name: '',
-  path: '',
-  component: '',
-  rank: 99,
-  redirect: '',
-  icon: '',
-  extraIcon: '',
-  enterTransition: '',
-  leaveTransition: '',
-  activePath: '',
-  auths: 'permission:btn:',
-  frameSrc: '',
-  frameLoading: true,
-  keepAlive: false,
-  hiddenTag: false,
-  fixedTag: false,
-  showLink: true,
-  showParent: true
-}
-
 // 动态构建树形数据
 const buildTreeData = (data: any) => {
   const map = new Map()
@@ -429,7 +407,7 @@ const buildTreeData = (data: any) => {
 // 获取数据
 const getList = () => {
   proxy.$api.getMenu().then((res: any) => {
-    if (!res.success) return
+    if (res.code !== 200) return
     // 初始化树形数据
     menuData.value = buildTreeData(res.data)
 
@@ -484,11 +462,39 @@ const showLink = (row: any) => {
   }
 }
 
+// 关闭弹窗
+const closeForm = () => {
+  proxy.$refs.formRef.resetFields()
+}
+
 // 新增
 const addRow = (row?: any) => {
   showForm.value = true
   formTitle.value = '新增'
-  form.value = formDef
+  form.value = {
+    parentId: 0,
+    menuType: 0, // 菜单类型（0代表菜单、1代表iframe、2代表外链、3代表按钮）
+    title: '',
+    i18nKey: '', // 国际化语言key
+    name: '',
+    path: '',
+    component: '',
+    rank: 99,
+    redirect: '',
+    icon: '',
+    extraIcon: '',
+    enterTransition: '',
+    leaveTransition: '',
+    activePath: '',
+    auths: '',
+    frameSrc: '',
+    frameLoading: true,
+    keepAlive: false,
+    hiddenTag: false,
+    fixedTag: false,
+    showLink: true,
+    showParent: true
+  }
   if (row.id) {
     form.value.parentId = row.id
   }
@@ -521,9 +527,7 @@ const deleteRow = (row: any) => {
 // 确定
 const submit = () => {
   showForm.value = false
-  form.value.parentId
-    ? (form.value.parentId = form.value.parentId[form.value.parentId.length - 1])
-    : (form.value.parentId = 0)
+  if (!form.value.parentId) form.value.parentId = 0
   console.log(form.value)
 }
 </script>

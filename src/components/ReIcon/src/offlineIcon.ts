@@ -6,9 +6,11 @@ import { addIcon } from '@iconify/vue/dist/offline'
 import Lollipop from '@iconify-icons/ep/lollipop'
 import HomeFilled from '@iconify-icons/ep/home-filled'
 import questionFilled from '@iconify-icons/ep/question-filled'
+import plus from '@iconify-icons/ep/plus'
 addIcon('ep:lollipop', Lollipop)
 addIcon('ep:home-filled', HomeFilled)
 addIcon('ep:question-filled', questionFilled)
+addIcon('ep:plus', plus)
 // @iconify-icons/ri
 import Search from '@iconify-icons/ri/search-line'
 import InformationLine from '@iconify-icons/ri/information-line'
