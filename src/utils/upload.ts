@@ -1,6 +1,7 @@
 import OSS from 'ali-oss'
 import { Api } from '@/api/index'
 
+// 阿里云直传
 const aliUpload = (obj: any) => {
   let fileName = 'files/' + obj.file.size + obj.file.name
   Api.getAlioss().then((res: any) => {
@@ -50,4 +51,21 @@ const aliUpload = (obj: any) => {
   })
 }
 
-export { aliUpload }
+// 后端接口上传
+const fileUpload = (obj: any) => {
+  Api.httpUpload({ file: obj.file }).then((res: any) => {
+    if (res.code == 200) {
+      // 上传组件成功钩子，返回文件url
+      obj.onSuccess(res.data.url)
+    } else {
+      obj.onError('上传失败')
+      ElMessage({
+        message: '上传失败',
+        type: 'error',
+        duration: 3 * 1000
+      })
+    }
+  })
+}
+
+export { aliUpload, fileUpload }

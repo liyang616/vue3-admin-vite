@@ -15,11 +15,11 @@
       </el-form-item>
       <el-form-item>
         <el-button type="primary" :icon="Search" @click="getList">搜索</el-button>
-        <Auth value="btn_add"><el-button type="primary" @click="add">新增</el-button></Auth>
+        <el-button type="primary" v-auth="'btn_add'" @click="add">新增</el-button>
       </el-form-item>
     </el-form>
     <div class="pub-table">
-      <el-table :data="list" :max-height="proxy.$tableHeight" border :row-key="(row) => row.id">
+      <el-table :data="list" :max-height="$tableHeight" border :row-key="(row) => row.id">
         <el-table-column label="角色ID" prop="id" min-width="80" />
         <el-table-column label="角色名称" prop="name" min-width="160" />
         <el-table-column label="角色标识" prop="code" min-width="100" />
@@ -49,12 +49,12 @@
         </el-table-column>
         <el-table-column label="操作" align="center" :fixed="$isMobile ? false : 'right'" min-width="130">
           <template #default="scope">
-            <Auth value="btn_edit">
-              <el-button link type="primary" @click.prevent="editRow(scope.row)"> 编辑 </el-button>
-            </Auth>
-            <Auth value="btn_delete">
-              <el-button link type="danger" @click.prevent="deleteRow(scope.row)"> 删除 </el-button>
-            </Auth>
+            <el-button link type="primary" v-auth="'btn_edit'" @click.prevent="editRow(scope.row)">
+              编辑
+            </el-button>
+            <el-button link type="danger" v-auth="'btn_delete'" @click.prevent="deleteRow(scope.row)">
+              删除
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -75,21 +75,21 @@
       v-model="showForm"
       :title="formTitle"
       draggable
-      width="660"
+      width="720"
       :close-on-click-modal="false"
       :fullscreen="$isMobile ? true : false"
       @close="closeForm"
     >
-      <el-form ref="formRef" :model="form" :rules="formRules" label-width="auto" class="pub-form">
+      <el-form ref="formRef" :model="dialogForm" :rules="formRules" label-width="auto" class="pub-form">
         <el-form-item label="角色名称" prop="name">
-          <el-input v-model="form.name" placeholder="请输入" />
+          <el-input v-model="dialogForm.name" placeholder="请输入" />
         </el-form-item>
         <el-form-item label="角色标识" prop="code">
-          <el-input v-model="form.code" placeholder="请输入" />
+          <el-input v-model="dialogForm.code" placeholder="请输入" />
         </el-form-item>
         <el-form-item label="菜单权限">
           <el-tree-select
-            v-model="form.menuIds"
+            v-model="dialogForm.menuIds"
             :data="menuData"
             multiple
             :render-after-expand="false"
@@ -107,7 +107,7 @@
         </el-form-item>
         <el-form-item label="状态">
           <el-switch
-            v-model="form.status"
+            v-model="dialogForm.status"
             inline-prompt
             active-text="已启用"
             inactive-text="已停用"
@@ -116,7 +116,7 @@
           />
         </el-form-item>
         <el-form-item label="备注">
-          <el-input v-model="form.remark" type="textarea" placeholder="请输入" />
+          <el-input v-model="dialogForm.remark" type="textarea" placeholder="请输入" />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -147,7 +147,7 @@ const searchForm = ref<any>({
 const list = ref([])
 const showForm = ref<boolean>(false)
 const formTitle = ref<any>('')
-const form = ref<any>({})
+const dialogForm = ref<any>({})
 const formRules = reactive({
   name: [{ required: true, message: '角色名称为必填项', trigger: 'blur' }],
   code: [{ required: true, message: '角色标识为必填项', trigger: 'blur' }]
@@ -245,7 +245,7 @@ const closeForm = () => {
 // 新增
 const add = () => {
   formTitle.value = '新增'
-  form.value = {
+  dialogForm.value = {
     name: '',
     code: '',
     menuIds: [],
@@ -261,7 +261,7 @@ const editRow = (row: any) => {
   formTitle.value = '编辑'
   showForm.value = true
   getMenu()
-  form.value = JSON.parse(JSON.stringify(row))
+  dialogForm.value = JSON.parse(JSON.stringify(row))
 }
 
 // 删除
@@ -280,8 +280,8 @@ const deleteRow = (row: any) => {
 // 确定
 const submit = () => {
   showForm.value = false
-  if (!form.value.parentId) form.value.parentId = 0
-  console.log(form.value)
+  if (!dialogForm.value.parentId) dialogForm.value.parentId = 0
+  console.log(dialogForm.value)
 }
 </script>
 

@@ -6,11 +6,11 @@
       </el-form-item>
       <el-form-item>
         <el-button type="primary" :icon="Search" @click="getList">搜索</el-button>
-        <Auth value="btn_add"><el-button type="primary" @click="addRow">新增</el-button></Auth>
+        <el-button type="primary" v-auth="'btn_add'" @click="addRow(0)">新增</el-button>
       </el-form-item>
     </el-form>
     <div class="pub-table">
-      <el-table :data="list" :max-height="proxy.$tableHeight" border :row-key="(row) => row.id">
+      <el-table :data="list" :max-height="$tableHeight" border :row-key="(row) => row.id">
         <el-table-column label="菜单名称" min-width="160">
           <template #default="scope">
             <IconifyIconOffline
@@ -26,27 +26,26 @@
         </el-table-column>
         <el-table-column label="菜单类型" :formatter="typeFormatter" min-width="90" />
         <el-table-column label="路由路径" prop="path" min-width="160" />
-        <el-table-column label="按钮权限" prop="auths" min-width="160" />
+        <el-table-column label="按钮权限" prop="auths" min-width="180" />
         <el-table-column label="排序" prop="rank" min-width="80" />
         <el-table-column label="隐藏" :formatter="showLink" min-width="80" />
         <el-table-column label="操作" align="center" :fixed="$isMobile ? false : 'right'" min-width="160">
           <template #default="scope">
-            <Auth value="btn_add">
-              <el-button
-                link
-                type="primary"
-                v-if="scope.row.menuType != 3"
-                @click.prevent="addRow(scope.row)"
-              >
-                新增
-              </el-button>
-            </Auth>
-            <Auth value="btn_edit">
-              <el-button link type="primary" @click.prevent="editRow(scope.row)"> 编辑 </el-button>
-            </Auth>
-            <Auth value="btn_delete">
-              <el-button link type="danger" @click.prevent="deleteRow(scope.row)"> 删除 </el-button>
-            </Auth>
+            <el-button
+              link
+              type="primary"
+              v-if="scope.row.menuType != 3"
+              v-auth="'btn_add'"
+              @click.prevent="addRow(1, scope.row)"
+            >
+              新增
+            </el-button>
+            <el-button link type="primary" v-auth="'btn_edit'" @click.prevent="editRow(scope.row)">
+              编辑
+            </el-button>
+            <el-button link type="danger" v-auth="'btn_delete'" @click.prevent="deleteRow(scope.row)">
+              删除
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -56,21 +55,21 @@
       v-model="showForm"
       :title="formTitle"
       draggable
-      width="660"
+      width="720"
       :close-on-click-modal="false"
       :fullscreen="$isMobile ? true : false"
       @close="closeForm"
     >
       <el-form
         ref="formRef"
-        :model="form"
+        :model="dialogForm"
         :rules="formRules"
         :inline="$isMobile ? false : true"
         label-width="auto"
         class="pub-form"
       >
         <el-form-item label="菜单类型" :class="$isMobile ? '' : 'w50'">
-          <el-select v-model="form.menuType" placeholder="请选择">
+          <el-select v-model="dialogForm.menuType" @change="resetForm" placeholder="请选择">
             <el-option label="菜单" :value="0" />
             <el-option label="iframe" :value="1" />
             <el-option label="外链" :value="2" />
@@ -79,54 +78,55 @@
         </el-form-item>
         <el-form-item label="上级菜单" class="w100">
           <el-cascader
-            v-model="form.parentId"
+            v-model="dialogForm.parentId"
             :options="menuData"
             :props="{
               checkStrictly: true,
               value: 'id',
               label: 'title'
             }"
+            @change="parentIdChange"
             clearable
             filterable
           />
         </el-form-item>
         <el-form-item label="菜单名称" :class="$isMobile ? 'w100' : 'w50'" prop="title">
-          <el-input v-model="form.title" placeholder="请输入" />
+          <el-input v-model="dialogForm.title" placeholder="请输入" />
         </el-form-item>
         <el-form-item
-          v-if="form.menuType != 3"
+          v-if="dialogForm.menuType != 3"
           label="路由名称"
           :class="$isMobile ? 'w100' : 'w50'"
           prop="name"
         >
-          <el-input v-model="form.name" placeholder="请输入" />
+          <el-input v-model="dialogForm.name" placeholder="请输入" />
         </el-form-item>
         <el-form-item
-          v-if="form.menuType != 3"
+          v-if="dialogForm.menuType != 3"
           label="路由路径"
           :class="$isMobile ? 'w100' : 'w50'"
           prop="path"
         >
-          <el-input v-model="form.path" placeholder="请输入" />
+          <el-input v-model="dialogForm.path" placeholder="请输入" />
         </el-form-item>
         <el-form-item
-          v-if="form.menuType == 1"
+          v-if="dialogForm.menuType == 1"
           label="链接地址"
           :class="$isMobile ? 'w100' : 'w50'"
           prop="frameSrc"
         >
-          <el-input v-model="form.frameSrc" placeholder="请输入 iframe 链接地址" />
+          <el-input v-model="dialogForm.frameSrc" placeholder="请输入 iframe 链接地址" />
         </el-form-item>
-        <el-form-item v-if="form.menuType == 1" label="加载动画" :class="$isMobile ? '' : 'w50'">
-          <el-select v-model="form.frameLoading" placeholder="请选择">
+        <el-form-item v-if="dialogForm.menuType == 1" label="加载动画" :class="$isMobile ? '' : 'w50'">
+          <el-select v-model="dialogForm.frameLoading" placeholder="请选择">
             <el-option label="开启" :value="true" />
             <el-option label="关闭" :value="false" />
           </el-select>
         </el-form-item>
-        <el-form-item v-if="form.menuType == 0" label="组件路径" :class="$isMobile ? 'w100' : 'w50'">
-          <el-input v-model="form.component" placeholder="默认和路由路径一致" />
+        <el-form-item v-if="dialogForm.menuType == 0" label="组件路径" :class="$isMobile ? 'w100' : 'w50'">
+          <el-input v-model="dialogForm.component" placeholder="默认和路由路径一致" />
         </el-form-item>
-        <el-form-item :class="$isMobile ? 'w100' : 'w50'">
+        <el-form-item v-if="dialogForm.menuType == 0" :class="$isMobile ? 'w100' : 'w50'">
           <template #label>
             <div class="question">
               <span>菜单排序</span>
@@ -140,25 +140,25 @@
               </el-tooltip>
             </div>
           </template>
-          <el-input-number v-model="form.rank" controls-position="right" placeholder="值越大越靠后" />
+          <el-input-number v-model="dialogForm.rank" controls-position="right" placeholder="值越大越靠后" />
         </el-form-item>
-        <el-form-item v-if="form.menuType == 3" :class="$isMobile ? 'w100' : 'w50'" prop="auths">
+        <el-form-item v-if="dialogForm.menuType == 3" :class="$isMobile ? 'w100' : 'w50'" prop="auths">
           <template #label>
             <div class="question">
               <span>权限标识</span>
               <el-tooltip
                 class="box-item"
                 effect="dark"
-                content="同个页面下的按钮权限标识必须保持唯一, 统一格式: btn_xx"
+                content="同个页面下的按钮权限标识必须保持唯一, 统一命名: 对应菜单url + btn_xx。拼接前缀使其唯一: 后端接口权限使用。 前端按钮权限判断无需前缀, 例: hasAuth('btn_add')"
                 placement="top"
               >
                 <IconifyIconOffline icon="ep:question-filled" aria-hidden="false" />
               </el-tooltip>
             </div>
           </template>
-          <el-input v-model="form.auths" placeholder="格式: btn_xx" />
+          <el-input v-model="dialogForm.auths" placeholder="格式: btn_xx" />
         </el-form-item>
-        <el-form-item v-if="form.menuType == 0" :class="$isMobile ? 'w100' : 'w50'">
+        <el-form-item v-if="dialogForm.menuType == 0" :class="$isMobile ? 'w100' : 'w50'">
           <template #label>
             <div class="question">
               <span>路由重定向</span>
@@ -167,9 +167,9 @@
               </el-tooltip>
             </div>
           </template>
-          <el-input v-model="form.redirect" placeholder="请输入" />
+          <el-input v-model="dialogForm.redirect" placeholder="请输入" />
         </el-form-item>
-        <el-form-item v-if="form.menuType != 3" :class="$isMobile ? 'w100' : 'w50'">
+        <el-form-item v-if="dialogForm.menuType != 3" :class="$isMobile ? 'w100' : 'w50'">
           <template #label>
             <div class="question">
               <span>菜单图标</span>
@@ -184,9 +184,9 @@
               </el-tooltip>
             </div>
           </template>
-          <el-input v-model="form.icon" placeholder="ep:home-filled" />
+          <el-input v-model="dialogForm.icon" placeholder="ep:home-filled" />
         </el-form-item>
-        <el-form-item v-if="form.menuType != 3" :class="$isMobile ? 'w100' : 'w50'">
+        <el-form-item v-if="dialogForm.menuType != 3" :class="$isMobile ? 'w100' : 'w50'">
           <template #label>
             <div class="question">
               <span>右侧图标</span>
@@ -201,14 +201,19 @@
               </el-tooltip>
             </div>
           </template>
-          <el-input v-model="form.extraIcon" placeholder="ri:search-line" />
+          <el-input v-model="dialogForm.extraIcon" placeholder="ri:search-line" />
         </el-form-item>
         <el-form-item
-          v-if="form.menuType != 2 && form.menuType != 3"
+          v-if="dialogForm.menuType != 2 && dialogForm.menuType != 3"
           label="进场动画"
           :class="$isMobile ? 'w100' : 'w50'"
         >
-          <el-select v-model="form.enterTransition" placeholder="手机端长按查看动画" clearable filterable>
+          <el-select
+            v-model="dialogForm.enterTransition"
+            placeholder="手机端长按查看动画"
+            clearable
+            filterable
+          >
             <el-option
               v-for="(item, i) in animates"
               :label="item"
@@ -223,11 +228,16 @@
           </el-select>
         </el-form-item>
         <el-form-item
-          v-if="form.menuType != 2 && form.menuType != 3"
+          v-if="dialogForm.menuType != 2 && dialogForm.menuType != 3"
           label="离场动画"
           :class="$isMobile ? 'w100' : 'w50'"
         >
-          <el-select v-model="form.leaveTransition" placeholder="手机端长按查看动画" clearable filterable>
+          <el-select
+            v-model="dialogForm.leaveTransition"
+            placeholder="手机端长按查看动画"
+            clearable
+            filterable
+          >
             <el-option
               v-for="(item, i) in animates"
               :label="item"
@@ -241,16 +251,29 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item v-if="form.menuType == 0" label="菜单激活" :class="$isMobile ? 'w100' : 'w50'">
-          <el-input v-model="form.activePath" placeholder="请输入" />
+        <el-form-item v-if="dialogForm.menuType == 0" :class="$isMobile ? '' : 'w50'">
+          <template #label>
+            <div class="question">
+              <span>菜单高亮</span>
+              <el-tooltip
+                class="box-item"
+                effect="dark"
+                content="当showLink: false隐藏的菜单，通过url直接访问时，指定高亮某个菜单"
+                placement="top"
+              >
+                <IconifyIconOffline icon="ep:question-filled" aria-hidden="false" />
+              </el-tooltip>
+            </div>
+          </template>
+          <el-input v-model="dialogForm.activePath" placeholder="高亮菜单的path" />
         </el-form-item>
-        <el-form-item v-if="form.menuType != 3" label="显示菜单" :class="$isMobile ? '' : 'w50'">
-          <el-select v-model="form.showLink" placeholder="请选择">
+        <el-form-item v-if="dialogForm.menuType != 3" label="显示菜单" :class="$isMobile ? '' : 'w50'">
+          <el-select v-model="dialogForm.showLink" placeholder="请选择">
             <el-option label="显示" :value="true" />
             <el-option label="隐藏" :value="false" />
           </el-select>
         </el-form-item>
-        <el-form-item v-if="form.menuType != 3" :class="$isMobile ? '' : 'w50'">
+        <el-form-item v-if="dialogForm.menuType != 3" :class="$isMobile ? '' : 'w50'">
           <template #label>
             <div class="question">
               <span>父级菜单</span>
@@ -264,12 +287,15 @@
               </el-tooltip>
             </div>
           </template>
-          <el-select v-model="form.showParent" placeholder="请选择">
+          <el-select v-model="dialogForm.showParent" placeholder="请选择">
             <el-option label="显示" :value="true" />
             <el-option label="隐藏" :value="false" />
           </el-select>
         </el-form-item>
-        <el-form-item v-if="form.menuType != 2 && form.menuType != 3" :class="$isMobile ? '' : 'w50'">
+        <el-form-item
+          v-if="dialogForm.menuType != 2 && dialogForm.menuType != 3"
+          :class="$isMobile ? '' : 'w50'"
+        >
           <template #label>
             <div class="question">
               <span>缓存页面</span>
@@ -283,12 +309,15 @@
               </el-tooltip>
             </div>
           </template>
-          <el-select v-model="form.keepAlive" placeholder="请选择">
+          <el-select v-model="dialogForm.keepAlive" placeholder="请选择">
             <el-option label="缓存" :value="true" />
             <el-option label="不缓存" :value="false" />
           </el-select>
         </el-form-item>
-        <el-form-item v-if="form.menuType != 2 && form.menuType != 3" :class="$isMobile ? '' : 'w50'">
+        <el-form-item
+          v-if="dialogForm.menuType != 2 && dialogForm.menuType != 3"
+          :class="$isMobile ? '' : 'w50'"
+        >
           <template #label>
             <div class="question">
               <span>标签页</span>
@@ -302,12 +331,15 @@
               </el-tooltip>
             </div>
           </template>
-          <el-select v-model="form.hiddenTag" placeholder="请选择">
+          <el-select v-model="dialogForm.hiddenTag" placeholder="请选择">
             <el-option label="允许" :value="false" />
             <el-option label="禁止" :value="true" />
           </el-select>
         </el-form-item>
-        <el-form-item v-if="form.menuType != 2 && form.menuType != 3" :class="$isMobile ? '' : 'w50'">
+        <el-form-item
+          v-if="dialogForm.menuType != 2 && dialogForm.menuType != 3"
+          :class="$isMobile ? '' : 'w50'"
+        >
           <template #label>
             <div class="question">
               <span>固定标签页</span>
@@ -321,7 +353,7 @@
               </el-tooltip>
             </div>
           </template>
-          <el-select v-model="form.fixedTag" placeholder="请选择">
+          <el-select v-model="dialogForm.fixedTag" placeholder="请选择">
             <el-option label="固定" :value="true" />
             <el-option label="不固定" :value="false" />
           </el-select>
@@ -340,7 +372,7 @@
               </el-tooltip>
             </div>
           </template>
-          <el-input v-model="form.i18nKey" placeholder="请输入" />
+          <el-input v-model="dialogForm.i18nKey" placeholder="请输入" />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -363,11 +395,12 @@ defineOptions({
 })
 
 const searchForm = ref<any>({})
+const listData = ref([])
 const menuData = ref([])
 const list = ref([])
 const showForm = ref<boolean>(false)
 const formTitle = ref<any>('')
-const form = ref<any>({})
+const dialogForm = ref<any>({})
 const hovered = ref<any>([])
 const formRules = reactive({
   title: [{ required: true, message: '菜单名称为必填项', trigger: 'blur' }],
@@ -408,6 +441,7 @@ const buildTreeData = (data: any) => {
 const getList = () => {
   proxy.$api.getMenu().then((res: any) => {
     if (res.code !== 200) return
+    listData.value = res.data
     // 初始化树形数据
     menuData.value = buildTreeData(res.data)
 
@@ -467,44 +501,50 @@ const closeForm = () => {
   proxy.$refs.formRef.resetFields()
 }
 
-// 新增
-const addRow = (row?: any) => {
+// 重置表单
+const resetForm = () => {
+  // dialogForm.value.parentId = 0 // 父节点id
+  // dialogForm.value.menuType = 0 // 菜单类型（0代表菜单、1代表iframe、2代表外链、3代表按钮）
+  dialogForm.value.title = '' // 菜单名称
+  dialogForm.value.i18nKey = '' // 国际化语言key
+  dialogForm.value.name = '' // 路由名称（必须保持唯一）
+  dialogForm.value.path = '' // 路由路径
+  dialogForm.value.component = '' // 组件路径
+  dialogForm.value.rank = 99 // 菜单排序
+  dialogForm.value.redirect = '' // 路由重定向path
+  dialogForm.value.icon = '' // 菜单图标
+  dialogForm.value.extraIcon = '' // 右侧图标
+  dialogForm.value.enterTransition = '' // 进场动画
+  dialogForm.value.leaveTransition = '' // 离场动画
+  dialogForm.value.activePath = '' // 菜单高亮
+  dialogForm.value.auths = '' // 按钮权限标识
+  dialogForm.value.frameSrc = '' // iframe链接地址
+  dialogForm.value.frameLoading = true // 开启iframe加载动画
+  dialogForm.value.keepAlive = false // 不缓存页面
+  dialogForm.value.hiddenTag = false // 当前菜单名称会显示在标签页
+  dialogForm.value.fixedTag = false // true时，当前菜单名称固定显示在标签页且不可以关闭
+  dialogForm.value.showLink = true // 显示菜单
+  dialogForm.value.showParent = true // 父级菜单只有一个子菜单时候，会显示父级菜单
+  if (dialogForm.value.parentId) parentIdChange()
+}
+
+// 新增, type:0一级菜单, type:1非一级菜单
+const addRow = (type: number, row?: any) => {
   showForm.value = true
   formTitle.value = '新增'
-  form.value = {
-    parentId: 0,
-    menuType: 0, // 菜单类型（0代表菜单、1代表iframe、2代表外链、3代表按钮）
-    title: '',
-    i18nKey: '', // 国际化语言key
-    name: '',
-    path: '',
-    component: '',
-    rank: 99,
-    redirect: '',
-    icon: '',
-    extraIcon: '',
-    enterTransition: '',
-    leaveTransition: '',
-    activePath: '',
-    auths: '',
-    frameSrc: '',
-    frameLoading: true,
-    keepAlive: false,
-    hiddenTag: false,
-    fixedTag: false,
-    showLink: true,
-    showParent: true
+  if (type === 0) dialogForm.value.parentId = 0
+  dialogForm.value.menuType = 0
+  if (row && row.id) {
+    dialogForm.value.parentId = row.id
   }
-  if (row.id) {
-    form.value.parentId = row.id
-  }
+  resetForm()
 }
 
 // 编辑
 const editRow = (row: any) => {
   showForm.value = true
   formTitle.value = '编辑'
-  form.value = JSON.parse(JSON.stringify(row))
+  dialogForm.value = JSON.parse(JSON.stringify(row))
 }
 
 // 删除
@@ -524,11 +564,33 @@ const deleteRow = (row: any) => {
     })
 }
 
+// 上级菜单变化时自动填写btn标识前缀
+const parentIdChange = () => {
+  if (dialogForm.value.menuType == 3) {
+    // 按钮权限拼接url做唯一值：后端接口权限使用
+    // 前端权限判断依然保持没有前缀的样子btn_xx
+    dialogForm.value.auths = listData.value
+      .find(
+        (item) =>
+          item.id ===
+          (Array.isArray(dialogForm.value.parentId)
+            ? dialogForm.value.parentId[dialogForm.value.parentId.length - 1]
+            : dialogForm.value.parentId)
+      )
+      .path.split('/')
+      .join(':')
+      .replace(/^:/, '')
+    if (dialogForm.value.auths) dialogForm.value.auths = dialogForm.value.auths + ':'
+  }
+}
+
 // 确定
 const submit = () => {
   showForm.value = false
-  if (!form.value.parentId) form.value.parentId = 0
-  console.log(form.value)
+  if (!dialogForm.value.parentId) dialogForm.value.parentId = 0
+
+  delete dialogForm.value.children
+  console.log(dialogForm.value)
 }
 </script>
 

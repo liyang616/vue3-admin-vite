@@ -123,8 +123,8 @@ export default defineFakeRoute([
       return {
         code: 200,
         data: [
-          { id: 1, name: '超级管理员' },
-          { id: 2, name: '普通角色' }
+          { code: 'admin', name: '超级管理员' },
+          { code: 'common', name: '普通角色' }
         ]
       }
     }
@@ -143,6 +143,20 @@ export default defineFakeRoute([
           bucket: 'tool-officel',
           region: 'oss-cn-guangzhou',
           stsToken: 'CAIS9gF1q6Ft5B2yfSjIr5fyM/7HtL0U+pC5VmOD3VMFT9dL2Z/SpTz2IH1JfX'
+        }
+      }
+    }
+  },
+
+  // 接口上传图片
+  {
+    url: apiUrl + '/upload',
+    method: 'post',
+    response: () => {
+      return {
+        code: 200,
+        data: {
+          url: 'http://42.194.189.215/images/picture/img14.jpg'
         }
       }
     }

@@ -61,6 +61,7 @@
     "code-inspector-plugin": "^0.18.2",
     "cssnano": "^7.0.6",
     "gradient-string": "^3.0.0",
+    "mockjs": "^1.1.0",
     "postcss": "^8.4.49",
     "postcss-html": "^1.7.0",
     "postcss-import": "^16.1.0",

@@ -1,5 +1,6 @@
 import { App } from 'vue'
 import http from '@/utils/request'
+import { httpUpload } from '@/utils/upload'
 
 const Api = {
   getLogin(data?: any) {
@@ -56,6 +57,20 @@ const Api = {
       url: '/alioss',
       method: 'get',
       params
+    })
+  },
+  httpUpload(data?: any) {
+    return http.request({
+      url: '/upload',
+      method: 'post',
+      data
+    })
+  },
+  getTable(data?: any) {
+    return http.request({
+      url: '/demo/table',
+      method: 'post',
+      data
     })
   }
 }

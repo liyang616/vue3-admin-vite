@@ -61,7 +61,7 @@ app.config.globalProperties.$language = ref<string>(localStorage.getItem('langua
 app.use(i18n)
 
 // table满屏，最佳高度
-app.config.globalProperties.$tableHeight = document.documentElement.clientHeight - 180
+app.config.globalProperties.$tableHeight = document.documentElement.clientHeight - 220
 
 // 判断是否为手机端
 const flag = navigator.userAgent.match(

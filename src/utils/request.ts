@@ -35,6 +35,12 @@ class HttpRequest {
         if (token) {
           config.headers['authorized-token'] = token
         }
+
+        // 上传接口使用multipart/form-data
+        if (config.url == '/upload') {
+          config.headers['Content-Type'] = 'multipart/form-data'
+        }
+
         return config
       },
       (error: any) => {

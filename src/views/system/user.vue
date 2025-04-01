@@ -15,11 +15,11 @@
       </el-form-item>
       <el-form-item>
         <el-button type="primary" :icon="Search" @click="getList">搜索</el-button>
-        <Auth value="btn_add"><el-button type="primary" @click="add">新增</el-button></Auth>
+        <el-button type="primary" v-auth="'btn_add'" @click="add">新增</el-button>
       </el-form-item>
     </el-form>
     <div class="pub-table">
-      <el-table :data="list" :max-height="proxy.$tableHeight" border :row-key="(row) => row.id">
+      <el-table :data="list" :max-height="$tableHeight" border :row-key="(row) => row.id">
         <el-table-column label="用户ID" prop="id" min-width="80" />
         <el-table-column label="头像" min-width="90" align="center">
           <template #default="scope">
@@ -34,26 +34,25 @@
             <span v-if="scope.row.sex == 1">女</span>
           </template>
         </el-table-column>
-        <Auth value="btn_edit">
-          <el-table-column label="状态" prop="status" min-width="90" align="center">
-            <template #default="scope">
-              <el-switch
-                v-model="scope.row.status"
-                inline-prompt
-                active-text="已启用"
-                inactive-text="已停用"
-                :active-value="1"
-                :inactive-value="0"
-                @change="statusChange($event, scope.row)"
-                v-if="hasAuth('btn_edit')"
-              />
-              <div v-else>
-                <span v-if="scope.row.status == 1">已启用</span>
-                <span v-if="scope.row.status == 0">已停用</span>
-              </div>
-            </template>
-          </el-table-column>
-        </Auth>
+        <el-table-column label="状态" prop="status" min-width="90" align="center">
+          <template #default="scope">
+            <el-switch
+              v-model="scope.row.status"
+              inline-prompt
+              active-text="已启用"
+              inactive-text="已停用"
+              :active-value="1"
+              :inactive-value="0"
+              @change="statusChange($event, scope.row)"
+              v-if="hasAuth('btn_edit')"
+            />
+            <div v-else>
+              <span v-if="scope.row.status == 1">已启用</span>
+              <span v-if="scope.row.status == 0">已停用</span>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column label="手机号" prop="phone" min-width="130" />
         <el-table-column label="备注" prop="remark" min-width="160" />
         <el-table-column label="创建时间" min-width="160" align="center">
           <template #default="scope">
@@ -62,12 +61,12 @@
         </el-table-column>
         <el-table-column label="操作" align="center" :fixed="$isMobile ? false : 'right'" min-width="130">
           <template #default="scope">
-            <Auth value="btn_edit">
-              <el-button link type="primary" @click.prevent="editRow(scope.row)"> 编辑 </el-button>
-            </Auth>
-            <Auth value="btn_delete">
-              <el-button link type="danger" @click.prevent="deleteRow(scope.row)"> 删除 </el-button>
-            </Auth>
+            <el-button link type="primary" v-auth="'btn_edit'" @click.prevent="editRow(scope.row)">
+              编辑
+            </el-button>
+            <el-button link type="danger" v-auth="'btn_delete'" @click.prevent="deleteRow(scope.row)">
+              删除
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -89,14 +88,14 @@
       v-model="showForm"
       :title="formTitle"
       draggable
-      width="660"
+      width="720"
       :close-on-click-modal="false"
       :fullscreen="$isMobile ? true : false"
       @close="closeForm"
     >
       <el-form
         ref="formRef"
-        :model="form"
+        :model="dialogForm"
         :rules="formRules"
         :inline="$isMobile ? false : true"
         label-width="auto"
@@ -120,33 +119,33 @@
           </el-upload>
         </el-form-item>
         <el-form-item label="用户名" prop="username" :class="$isMobile ? '' : 'w50'">
-          <el-input v-model="form.username" placeholder="请输入" />
+          <el-input v-model="dialogForm.username" placeholder="请输入" />
         </el-form-item>
         <el-form-item label="昵称" prop="nickname" :class="$isMobile ? '' : 'w50'">
-          <el-input v-model="form.nickname" placeholder="请输入" />
+          <el-input v-model="dialogForm.nickname" placeholder="请输入" />
         </el-form-item>
         <el-form-item
           label="密码"
-          prop="nickname"
+          prop="password"
           :class="$isMobile ? '' : 'w50'"
           v-if="formTitle != '编辑'"
         >
-          <el-input v-model="form.password" placeholder="请输入" />
+          <el-input v-model="dialogForm.password" placeholder="请输入" />
         </el-form-item>
         <el-form-item label="角色" :class="$isMobile ? '' : 'w50'">
-          <el-select v-model="form.roles" multiple placeholder="请选择" style="width: 240px">
-            <el-option v-for="item in roleList" :key="item.id" :label="item.name" :value="item.id" />
+          <el-select v-model="dialogForm.roles" multiple placeholder="请选择">
+            <el-option v-for="item in roleList" :key="item.code" :label="item.name" :value="item.code" />
           </el-select>
         </el-form-item>
         <el-form-item label="性别" :class="$isMobile ? '' : 'w50'">
-          <el-select v-model="form.sex" placeholder="请选择" style="width: 240px">
+          <el-select v-model="dialogForm.sex" placeholder="请选择">
             <el-option label="男" :value="0" />
             <el-option label="女" :value="1" />
           </el-select>
         </el-form-item>
         <el-form-item label="状态" :class="$isMobile ? '' : 'w50'">
           <el-switch
-            v-model="form.status"
+            v-model="dialogForm.status"
             inline-prompt
             active-text="已启用"
             inactive-text="已停用"
@@ -155,13 +154,13 @@
           />
         </el-form-item>
         <el-form-item label="手机号" :class="$isMobile ? '' : 'w50'">
-          <el-input v-model="form.phone" placeholder="请输入" />
+          <el-input v-model="dialogForm.phone" placeholder="请输入" />
         </el-form-item>
         <el-form-item label="邮箱" :class="$isMobile ? '' : 'w50'">
-          <el-input v-model="form.email" placeholder="请输入" />
+          <el-input v-model="dialogForm.email" placeholder="请输入" />
         </el-form-item>
         <el-form-item label="备注" :class="$isMobile ? '' : 'w100'">
-          <el-input v-model="form.remark" type="textarea" placeholder="请输入" />
+          <el-input v-model="dialogForm.remark" type="textarea" placeholder="请输入" />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -195,7 +194,7 @@ const searchForm = ref<any>({
 const list = ref([])
 const showForm = ref<boolean>(false)
 const formTitle = ref<any>('')
-const form = ref<any>({})
+const dialogForm = ref<any>({})
 const formRules = reactive({
   username: [{ required: true, message: '用户名为必填项', trigger: 'blur' }],
   nickname: [{ required: true, message: '昵称为必填项', trigger: 'blur' }],
@@ -285,10 +284,10 @@ const handleSuccess = (fileList) => {
   for (let i = 0; i < fileList.length; i++) {
     url.push(fileList[i].response)
   }
-  form.value.avatar = url.toString()
+  dialogForm.value.avatar = url.toString()
 }
 const handleRemove = () => {
-  form.value.avatar = ''
+  dialogForm.value.avatar = ''
 }
 const handlePreview = (file: any) => {
   viewerApi({
@@ -315,7 +314,7 @@ const closeForm = () => {
 // 新增
 const add = () => {
   formTitle.value = '新增'
-  form.value = {
+  dialogForm.value = {
     avatar: '',
     username: '',
     nickname: '',
@@ -337,7 +336,7 @@ const editRow = (row: any) => {
   showForm.value = true
   getAllRole()
   let rowData = JSON.parse(JSON.stringify(row))
-  form.value = rowData
+  dialogForm.value = rowData
   fileList.value = [{ url: rowData.avatar }]
 }
 
@@ -357,7 +356,7 @@ const deleteRow = (row: any) => {
 // 确定
 const submit = () => {
   showForm.value = false
-  console.log(form.value)
+  console.log(dialogForm.value)
 }
 </script>
 

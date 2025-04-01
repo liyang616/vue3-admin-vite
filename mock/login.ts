@@ -1,4 +1,3 @@
-// 根据角色动态生成路由
 import { defineFakeRoute } from 'vite-plugin-fake-server/client'
 
 const apiUrl = 'https://vue3.admin.com/api'
@@ -29,7 +28,7 @@ export default defineFakeRoute([
             username: 'common',
             nickname: '陈平安',
             roles: ['common'],
-            permissions: ['btn_add', 'btn_edit'],
+            permissions: ['*:*:*'],
             accessToken: 'eyJhbGciOiJIUzUxMiJ9.common'
           }
         }

@@ -14,18 +14,32 @@ const system = {
     title: '系统管理',
     i18nKey: '',
     icon: 'ep:tools',
-    rank: 12
+    rank: 11
   },
   children: [
     {
       path: '/system/menu',
       name: 'systemMenu',
+      redirect: '',
+      component: '',
       meta: {
         title: '菜单管理',
         i18nKey: '',
         showParent: true,
-        roles: ['admin', 'common'],
-        auths: ['btn_add', 'btn_edit', 'btn_delete']
+        roles: ['admin'],
+        auths: ['btn_add', 'btn_edit', 'btn_delete'],
+        icon: '',
+        extraIcon: '',
+        showLink: '',
+        keepAlive: false,
+        frameSrc: '',
+        frameLoading: true,
+        transition: {
+          enterTransition: '',
+          leaveTransition: ''
+        },
+        hiddenTag: false,
+        activePath: ''
       }
     },
     {
@@ -35,7 +49,7 @@ const system = {
         title: '角色管理',
         i18nKey: '',
         showParent: true,
-        roles: ['admin', 'common'],
+        roles: ['admin'],
         auths: ['btn_add', 'btn_edit', 'btn_delete']
       }
     },
@@ -53,6 +67,30 @@ const system = {
   ]
 }
 
+const demo = {
+  path: '/demo',
+  redirect: '/demo/table',
+  meta: {
+    title: '模板',
+    i18nKey: '',
+    icon: 'ep:menu',
+    rank: 12
+  },
+  children: [
+    {
+      path: '/demo/table',
+      name: 'demoTable',
+      meta: {
+        title: '表格',
+        i18nKey: '',
+        showParent: true,
+        roles: ['admin', 'common'],
+        auths: ['btn_add', 'btn_edit', 'btn_delete']
+      }
+    }
+  ]
+}
+
 const docs = {
   path: '/docs',
   redirect: '/docs/element-plus',
@@ -60,7 +98,7 @@ const docs = {
     title: '相关文档',
     i18nKey: '',
     icon: 'ep:link',
-    rank: 11
+    rank: 13
   },
   children: [
     {
@@ -117,7 +155,7 @@ export default defineFakeRoute([
     response: () => {
       return {
         code: 200,
-        data: [system, docs]
+        data: [system, demo, docs]
       }
     }
   }

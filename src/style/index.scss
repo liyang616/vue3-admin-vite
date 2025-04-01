@@ -64,6 +64,23 @@
     margin-top: 16px;
     justify-content: center;
   }
+  .img-box {
+    width: 80px;
+    height: 80px;
+    cursor: pointer;
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+  }
+  .el-table .cell {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+    word-break: break-all;
+  }
 }
 
 // 弹窗表单
@@ -106,4 +123,10 @@
   .submit {
     margin: 0 auto;
   }
+}
+
+.el-upload--picture-card,
+.el-upload-list--picture-card .el-upload-list__item {
+  width: 80px !important;
+  height: 80px !important;
 }
