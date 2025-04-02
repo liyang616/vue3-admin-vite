@@ -41,6 +41,9 @@ class HttpRequest {
           config.headers['Content-Type'] = 'multipart/form-data'
         }
 
+        // get请求带个hash值, 解决cdn缓存问题
+        if (config.method == 'get') config.url = config.url + '?t=' + new Date().getTime()
+
         return config
       },
       (error: any) => {

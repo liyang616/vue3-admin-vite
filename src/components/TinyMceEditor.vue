@@ -55,7 +55,7 @@ const initEditor = async () => {
       'importcss',
       'searchreplace',
       'autolink',
-      'autosave',
+      // 'autosave',
       'save',
       'directionality',
       'code',

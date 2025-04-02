@@ -50,7 +50,7 @@
         <el-table-column label="图片" width="104" align="center">
           <template #default="scope">
             <div class="img-box">
-              <img v-viewer :src="'/src/assets/picture/' + scope.row.image + '.jpg'" alt="" />
+              <img v-viewer :src="getAssetURL(scope.row.image)" alt="" />
             </div>
           </template>
         </el-table-column>
@@ -200,6 +200,11 @@ defineOptions({
   name: 'demoTable'
 })
 
+// vite动态获取本地图片
+const getAssetURL = (num) => {
+  return new URL(`/src/assets/picture/${num}.jpg`, import.meta.url).href
+}
+
 const dateArea = ref<any>([])
 const searchForm = ref<any>({
   name: '',
@@ -345,7 +350,7 @@ const editRow = (row: any) => {
   showForm.value = true
   let rowData = JSON.parse(JSON.stringify(row))
   dialogForm.value = rowData
-  fileList.value = [{ url: '/src/assets/picture/' + rowData.image + '.jpg' }]
+  fileList.value = [{ url: getAssetURL(rowData.image) }]
 }
 
 // 删除

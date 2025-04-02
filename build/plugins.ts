@@ -12,10 +12,7 @@ import removeConsole from 'vite-plugin-remove-console'
 import { codeInspectorPlugin } from 'code-inspector-plugin'
 import { vitePluginFakeServer } from 'vite-plugin-fake-server'
 
-export function getPluginsList(
-  VITE_CDN: boolean,
-  VITE_COMPRESSION: ViteCompression
-): PluginOption[] {
+export function getPluginsList(VITE_CDN: boolean, VITE_COMPRESSION: ViteCompression): PluginOption[] {
   const lifecycle = process.env.npm_lifecycle_event
   return [
     vue(),

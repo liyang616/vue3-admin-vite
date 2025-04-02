@@ -11,9 +11,9 @@ export default defineFakeRoute([
       return {
         code: 200,
         data: {
-          avatar: 'https://avatars.githubusercontent.com/u/44761321',
+          avatar: 'http://42.194.189.215/images/head.jpg',
           username: 'admin',
-          nickname: '小铭',
+          nickname: '凌云枫',
           sex: 0,
           email: 'vue3Admin@qq.com',
           phone: '15888889999',
@@ -73,7 +73,7 @@ export default defineFakeRoute([
     response: ({ body }) => {
       let list = [
         {
-          avatar: 'https://avatars.githubusercontent.com/u/44761321',
+          avatar: 'http://42.194.189.215/images/head.jpg',
           username: 'admin',
           nickname: '小铭',
           phone: '15888889999',
@@ -86,7 +86,7 @@ export default defineFakeRoute([
           createTime: 1605456000000
         },
         {
-          avatar: 'https://avatars.githubusercontent.com/u/52823142',
+          avatar: 'https://avatars.githubusercontent.com/u/44761321',
           username: 'common',
           nickname: '小林',
           phone: '18288886666',

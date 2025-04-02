@@ -292,7 +292,7 @@ useIntervalFn(draw, 100)
 
 <template>
   <div>
-    <h1>vue3-admin-vite（国际化版本）</h1>
+    <h1>vue3-admin-vite（{{ $t('welcome.Internationalversion') }}）</h1>
     <div ref="chartRef" style="width: 100%; height: 50vh" />
   </div>
 </template>

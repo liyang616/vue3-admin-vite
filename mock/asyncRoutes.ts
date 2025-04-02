@@ -12,7 +12,7 @@ const system = {
   redirect: '/system/menu',
   meta: {
     title: '系统管理',
-    i18nKey: '',
+    i18nKey: 'menus.SystemManagement',
     icon: 'ep:tools',
     rank: 11
   },
@@ -24,7 +24,7 @@ const system = {
       component: '',
       meta: {
         title: '菜单管理',
-        i18nKey: '',
+        i18nKey: 'menus.MenuManagement',
         showParent: true,
         roles: ['admin'],
         auths: ['btn_add', 'btn_edit', 'btn_delete'],
@@ -47,7 +47,7 @@ const system = {
       name: 'systemRole',
       meta: {
         title: '角色管理',
-        i18nKey: '',
+        i18nKey: 'menus.RoleManagement',
         showParent: true,
         roles: ['admin'],
         auths: ['btn_add', 'btn_edit', 'btn_delete']
@@ -58,7 +58,7 @@ const system = {
       name: 'systemUser',
       meta: {
         title: '用户管理',
-        i18nKey: '',
+        i18nKey: 'menus.UserManagement',
         showParent: true,
         roles: ['admin'],
         auths: ['btn_add', 'btn_edit', 'btn_delete']
@@ -72,7 +72,7 @@ const demo = {
   redirect: '/demo/table',
   meta: {
     title: '模板',
-    i18nKey: '',
+    i18nKey: 'menus.Template',
     icon: 'ep:menu',
     rank: 12
   },
@@ -82,7 +82,7 @@ const demo = {
       name: 'demoTable',
       meta: {
         title: '表格',
-        i18nKey: '',
+        i18nKey: 'menus.Table',
         showParent: true,
         roles: ['admin', 'common'],
         auths: ['btn_add', 'btn_edit', 'btn_delete']
@@ -96,11 +96,21 @@ const docs = {
   redirect: '/docs/element-plus',
   meta: {
     title: '相关文档',
-    i18nKey: '',
+    i18nKey: 'menus.RelatedDocuments',
     icon: 'ep:link',
     rank: 13
   },
   children: [
+    {
+      path: '/docs/vue3-admin-vite',
+      name: 'https://github.com/liyang616/vue3-admin-vite',
+      meta: {
+        title: 'vue3-admin-vite',
+        i18nKey: '',
+        showParent: true,
+        roles: ['admin', 'common']
+      }
+    },
     {
       path: '/docs/Element-Plus',
       name: 'ElementPlus',
@@ -127,7 +137,7 @@ const docs = {
       path: '/docs/iconify',
       name: 'iconify',
       meta: {
-        title: 'iconify图集',
+        title: 'iconify',
         i18nKey: '',
         frameSrc: 'https://yesicon.app/',
         showParent: true,
@@ -138,7 +148,17 @@ const docs = {
       path: '/docs/pure-admin',
       name: 'https://pure-admin.cn/',
       meta: {
-        title: 'pure-admin外链',
+        title: 'pure-admin',
+        i18nKey: '',
+        showParent: true,
+        roles: ['admin', 'common']
+      }
+    },
+    {
+      path: '/docs/pure-admin-utils',
+      name: 'https://pure-admin-utils.netlify.app/guide/guide',
+      meta: {
+        title: 'pure-admin-utils',
         i18nKey: '',
         showParent: true,
         roles: ['admin', 'common']

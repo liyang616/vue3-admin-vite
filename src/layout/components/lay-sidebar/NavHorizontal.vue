@@ -129,7 +129,6 @@ onMounted(() => {
 
   ::v-deep(.el-dropdown-menu__item) {
     display: inline-flex;
-    flex-wrap: wrap;
     min-width: 100%;
   }
 }

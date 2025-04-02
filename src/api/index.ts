@@ -1,6 +1,5 @@
 import { App } from 'vue'
 import http from '@/utils/request'
-import { httpUpload } from '@/utils/upload'
 
 const Api = {
   getLogin(data?: any) {

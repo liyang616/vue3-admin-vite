@@ -1,11 +1,23 @@
 ## 简介
 
-`vue3-admin-vite` 是一款开源免费且开箱即用的中后台管理系统模版,兼容移动端、支持语言国际化。完全采用 `ECMAScript` 模块（`ESM`）规范来编写和组织代码，使用了最新的 `Vue3`、
+`vue3-admin-vite` 是一款开源免费且开箱即用的中后台管理系统模版，兼容移动端、支持语言国际化。  
+完全采用 `ECMAScript` 模块（`ESM`）规范来编写和组织代码，使用了最新的 `Vue3`、
 `Vite`、`Element-Plus`、`TypeScript`、`Pinia`、`Tailwindcss` 等主流技术开发
 
 ## 鸣谢
 
-感谢 vue-pure-admin 作者大佬，本项目是在 [vue-pure-admin](https://github.com/pure-admin/vue-pure-admin) 基础上按整合的精简版，文档参考 [Pure Admin 保姆级文档](https://pure-admin.cn/pages/introduction/)
+感谢 vue-pure-admin 作者  
+本项目是在 [vue-pure-admin](https://github.com/pure-admin/vue-pure-admin) 基础上按整合的精简版  
+文档参考 [Pure Admin 保姆级文档](https://pure-admin.cn/pages/introduction/)  
+常用工具图表、去水印等 [@pureadmin/utils](https://pure-admin-utils.netlify.app/guide/guide)
+
+## 预览
+
+预览: [vue3-admin-vite](http://42.194.189.215:83)
+
+## 国际化
+
+演示环境支持菜单、设置栏、首页这几个地方的语言切换，其他请参照自行拓展
 
 ### 安装依赖
 

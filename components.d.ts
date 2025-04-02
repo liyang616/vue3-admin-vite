@@ -7,7 +7,6 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    Components: typeof import('./src/components/index.vue')['default']
     ElAvatar: typeof import('element-plus/es')['ElAvatar']
     ElBacktop: typeof import('element-plus/es')['ElBacktop']
     ElBadge: typeof import('element-plus/es')['ElBadge']
@@ -47,7 +46,6 @@ declare module 'vue' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     Src: typeof import('./src/components/ReText/src/index.vue')['default']
-    TinymceEditor: typeof import('./src/components/TinymceEditor.vue')['default']
     TinyMceEditor: typeof import('./src/components/TinyMceEditor.vue')['default']
   }
   export interface ComponentCustomProperties {

@@ -12,7 +12,7 @@ import { useUserStoreHook } from '@/store/modules/user'
 import { initRouter, getTopMenu } from '@/router/utils'
 import { bg, avatar, illustration } from './utils/static'
 import { useRenderIcon } from '@/components/ReIcon/src/hooks'
-import { ref, reactive, toRaw, onMounted, onBeforeUnmount } from 'vue'
+import { ref, reactive, toRaw, onMounted, onBeforeUnmount, getCurrentInstance } from 'vue'
 import { useDataThemeChange } from '@/layout/hooks/useDataThemeChange'
 
 import dayIcon from '@/assets/svg/day.svg?component'
@@ -24,10 +24,12 @@ import User from '@iconify-icons/ri/user-3-fill'
 import Language from '@/components/Language.vue'
 import { useRoute } from 'vue-router'
 const route = useRoute()
+const { proxy }: any = getCurrentInstance()
 
 defineOptions({
   name: 'Login'
 })
+
 const router = useRouter()
 const loading = ref(false)
 const ruleFormRef = ref<FormInstance>()
