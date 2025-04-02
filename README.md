@@ -13,11 +13,17 @@
 
 ## 预览
 
-预览: [vue3-admin-vite](http://42.194.189.215:83)
+预览: [vue3-admin-vite](http://42.194.189.215:83)  
+纯前端演示，暂不支持新增、修改、删除功能
 
 ## 国际化
 
 演示环境支持菜单、设置栏、首页这几个地方的语言切换，其他请参照自行拓展
+
+## Mock 模拟数据
+
+采用 Mock 模拟数据的纯前端演示  
+具体 API 数据格式请参考[mock 文件夹](https://github.com/liyang616/vue3-admin-vite/tree/main/mock)
 
 ### 安装依赖
 
