@@ -2,7 +2,7 @@
 
 `vue3-admin-vite` 是一款开源免费且开箱即用的中后台管理系统模版，兼容移动端、支持语言国际化。  
 完全采用 `ECMAScript` 模块（`ESM`）规范来编写和组织代码，使用了最新的 `Vue3`、
-`Vite`、`Element-Plus`、`TypeScript`、`Pinia`、`Tailwindcss` 等主流技术开发
+`Vite`、`Element-Plus`、`TinyMCE 7`、`TypeScript`、`Pinia`、`Tailwindcss` 等主流技术开发
 
 ## 鸣谢
 
@@ -44,6 +44,15 @@ pnpm dev
 ```bash
 pnpm build
 ```
+
+### 许可证
+
+完全免费开源  
+[MIT © 2025 vue3-admin-vite](https://github.com/liyang616/vue3-admin-vite/blob/main/LICENSE)
+
+### 维护者
+
+[liyang616](https://github.com/liyang616)
 
 ## `Git` 贡献提交规范
 
