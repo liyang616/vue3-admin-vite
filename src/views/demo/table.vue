@@ -202,7 +202,7 @@ defineOptions({
 
 // vite动态获取本地图片
 const getAssetURL = (num) => {
-  return new URL(`/src/assets/picture/${num}.jpg`, import.meta.url).href
+  return new URL(`/src/assets/picture/img${num}.jpg`, import.meta.url).href
 }
 
 const dateArea = ref<any>([])
