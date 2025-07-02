@@ -179,7 +179,7 @@
       <template #footer>
         <div class="dialog-footer">
           <el-button @click="showForm = false">取消</el-button>
-          <el-button type="primary" @click="submit"> 确定 </el-button>
+          <el-button type="primary" :loading="submitLoading" @click="submit"> 确定 </el-button>
         </div>
       </template>
     </el-dialog>
@@ -243,6 +243,7 @@ const handleCurrentChange = (val: number) => {
 // 获取数据
 const getList = () => {
   let json = { ...searchForm.value, ...page.value }
+  if (!dateArea.value) dateArea.value = []
   if (!proxy.$isMobile) {
     json.startDate = dateArea.value[0]
     json.endDate = dateArea.value[1]
@@ -299,10 +300,10 @@ const handleSuccess = (fileList) => {
   for (let i = 0; i < fileList.length; i++) {
     url.push(fileList[i].response)
   }
-  dialogForm.value.avatar = url.toString()
+  dialogForm.value.image = url.toString()
 }
 const handleRemove = () => {
-  dialogForm.value.avatar = ''
+  dialogForm.value.image = ''
 }
 const handlePreview = (file: any) => {
   viewerApi({
@@ -329,18 +330,7 @@ const closeForm = () => {
 // 新增
 const add = () => {
   formTitle.value = '新增'
-  dialogForm.value = {
-    avatar: '',
-    username: '',
-    nickname: '',
-    password: '',
-    phone: '',
-    email: '',
-    sex: '',
-    status: 1,
-    roles: [],
-    remark: ''
-  }
+  dialogForm.value = {}
   showForm.value = true
 }
 
@@ -362,14 +352,51 @@ const deleteRow = (row: any) => {
   })
     .then(() => {})
     .catch(() => {
-      // catch error
+      // proxy.$api.tableDel(row.id).then((res: any) => {
+      //   if (res.code !== 200) return
+      //   getList()
+      //   ElMessage({
+      //     message: '删除成功',
+      //     type: 'success'
+      //   })
+      // })
     })
 }
 
 // 确定
+const submitLoading = ref<boolean>(false)
 const submit = () => {
-  showForm.value = false
-  console.log(dialogForm.value)
+  proxy.$refs.formRef.validate((valid: any) => {
+    if (valid) {
+      // submitLoading.value = true
+      // if (dialogForm.value.id) {
+      //   proxy.$api.tableEdit(dialogForm.value).then((res: any) => {
+      //     submitLoading.value = false
+      //     if (res.code !== 200) return
+      //     showForm.value = false
+      //     getList()
+      //     ElMessage({
+      //       message: '编辑成功',
+      //       type: 'success'
+      //     })
+      //   })
+      // } else {
+      //   proxy.$api.tableAdd(dialogForm.value).then((res: any) => {
+      //     submitLoading.value = false
+      //     if (res.code !== 200) return
+      //     showForm.value = false
+      //     getList()
+      //     ElMessage({
+      //       message: '新增成功',
+      //       type: 'success'
+      //     })
+      //   })
+      // }
+
+      showForm.value = false
+      console.log(JSON.stringify(dialogForm.value))
+    }
+  })
 }
 </script>
 

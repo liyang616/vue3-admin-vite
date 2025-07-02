@@ -18,21 +18,19 @@ export interface DataInfo<T> {
 }
 
 export const userKey = 'user-info'
-export const TokenKey = 'authorized-token'
+export const TokenKey = 'authorized-token0' // key区分(随便自定义): 因cookies公用特性，同时有多套系统的时候，避免全部系统退出
 /**
  * 通过`multiple-tabs`是否在`cookie`中，判断用户是否已经登录系统，
  * 从而支持多标签页打开已经登录的系统后无需再登录。
  * 浏览器完全关闭后`multiple-tabs`将自动从`cookie`中销毁，
  * 再次打开浏览器需要重新登录系统
  * */
-export const multipleTabsKey = 'multiple-tabs'
+export const multipleTabsKey = 'multiple-tabs0' // key区分(随便自定义): 因cookies公用特性，同时有多套系统的时候，避免全部系统退出
 
 /** 获取`token` */
 export function getToken(): DataInfo<number> {
   // 此处与`TokenKey`相同，此写法解决初始化时`Cookies`中不存在`TokenKey`报错
-  return Cookies.get(TokenKey)
-    ? JSON.parse(Cookies.get(TokenKey))
-    : storageLocal().getItem(userKey)
+  return Cookies.get(TokenKey) ? JSON.parse(Cookies.get(TokenKey)) : storageLocal().getItem(userKey)
 }
 
 /**
@@ -71,15 +69,11 @@ export function setToken(data: DataInfo<Date>) {
       permissions: data?.permissions ?? []
     })
   } else {
-    const avatar =
-      storageLocal().getItem<DataInfo<number>>(userKey)?.avatar ?? ''
-    const username =
-      storageLocal().getItem<DataInfo<number>>(userKey)?.username ?? ''
-    const nickname =
-      storageLocal().getItem<DataInfo<number>>(userKey)?.nickname ?? ''
+    const avatar = storageLocal().getItem<DataInfo<number>>(userKey)?.avatar ?? ''
+    const username = storageLocal().getItem<DataInfo<number>>(userKey)?.username ?? ''
+    const nickname = storageLocal().getItem<DataInfo<number>>(userKey)?.nickname ?? ''
     const roles = storageLocal().getItem<DataInfo<number>>(userKey)?.roles ?? []
-    const permissions =
-      storageLocal().getItem<DataInfo<number>>(userKey)?.permissions ?? []
+    const permissions = storageLocal().getItem<DataInfo<number>>(userKey)?.permissions ?? []
     setUserKey({
       avatar,
       username,
@@ -109,8 +103,6 @@ export const hasPerms = (value: string | Array<string>): boolean => {
   const { permissions } = useUserStoreHook()
   if (!permissions) return false
   if (permissions.length === 1 && permissions[0] === allPerms) return true
-  const isAuths = isString(value)
-    ? permissions.includes(value)
-    : isIncludeAllChildren(value, permissions)
+  const isAuths = isString(value) ? permissions.includes(value) : isIncludeAllChildren(value, permissions)
   return isAuths ? true : false
 }

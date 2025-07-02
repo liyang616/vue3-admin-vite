@@ -30,6 +30,18 @@ defineOptions({
   name: 'Login'
 })
 
+// 验证码
+const codeImg = ref<any>('')
+const codeImgUUID = ref<any>('')
+const getCodeImg = () => {
+  proxy.$api.getCaptcha().then((res: any) => {
+    if (res.code !== 200) return
+    codeImg.value = res.data.img
+    codeImgUUID.value = res.data.uuid
+  })
+}
+getCodeImg()
+
 const router = useRouter()
 const loading = ref(false)
 const ruleFormRef = ref<FormInstance>()
@@ -43,7 +55,8 @@ const { title, getDropdownItemStyle, getDropdownItemClass } = useNav()
 
 const ruleForm = reactive({
   username: 'admin',
-  password: 'admin123'
+  password: 'admin123',
+  code: '12'
 })
 
 const onLogin = async (formEl: FormInstance | undefined) => {
@@ -52,7 +65,12 @@ const onLogin = async (formEl: FormInstance | undefined) => {
     if (valid) {
       loading.value = true
       useUserStoreHook()
-        .loginByUsername({ username: ruleForm.username, password: 'admin123' })
+        .loginByUsername({
+          username: ruleForm.username,
+          password: ruleForm.password,
+          code: ruleForm.code,
+          uuid: codeImgUUID.value
+        })
         .then((res: any) => {
           if (res.code == 200) {
             // 获取后端路由
@@ -145,6 +163,15 @@ onBeforeUnmount(() => {
               </el-form-item>
             </Motion>
 
+            <Motion :delay="150">
+              <el-form-item>
+                <div class="codeImg">
+                  <el-input v-model="ruleForm.code" clearable :placeholder="$t('login.VerificationCode')" />
+                  <img :src="codeImg" @click="getCodeImg" alt="" />
+                </div>
+              </el-form-item>
+            </Motion>
+
             <Motion :delay="250">
               <el-button
                 class="w-full mt-4"
@@ -170,6 +197,15 @@ onBeforeUnmount(() => {
 <style lang="scss" scoped>
 :deep(.el-input-group__append, .el-input-group__prepend) {
   padding: 0;
+}
+
+.codeImg {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  img {
+    width: auto;
+  }
 }
 
 .translation {

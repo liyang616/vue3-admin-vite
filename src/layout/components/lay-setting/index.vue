@@ -27,6 +27,7 @@ import RightArrow from '@iconify-icons/ri/arrow-right-s-line'
 import DayIcon from '@/assets/svg/day.svg?component'
 import DarkIcon from '@/assets/svg/dark.svg?component'
 import SystemIcon from '@/assets/svg/system.svg?component'
+import { userKey } from '@/utils/auth'
 
 const { t } = useI18n()
 const { device } = useNav()
@@ -93,7 +94,7 @@ function storageConfigureChange<T>(key: string, val: T): void {
 
 // 创建水印
 const watermarkSet = () => {
-  setWatermark(JSON.parse(localStorage.getItem('user-info')).nickname || '', {
+  setWatermark(JSON.parse(localStorage.getItem(userKey)).username || '', {
     width: 260,
     height: 160,
     rotate: 20

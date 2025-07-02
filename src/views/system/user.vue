@@ -14,7 +14,7 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" :icon="Search" @click="getList">搜索</el-button>
+        <el-button type="primary" :icon="Search" :loading="searchLoading" @click="getList">搜索</el-button>
         <el-button type="primary" v-auth="'btn_add'" @click="add">新增</el-button>
       </el-form-item>
     </el-form>
@@ -166,7 +166,7 @@
       <template #footer>
         <div class="dialog-footer">
           <el-button @click="showForm = false">取消</el-button>
-          <el-button type="primary" @click="submit"> 确定 </el-button>
+          <el-button type="primary" :loading="submitLoading" @click="submit"> 确定 </el-button>
         </div>
       </template>
     </el-dialog>
@@ -221,9 +221,12 @@ const handleCurrentChange = (val: number) => {
 }
 
 // 获取数据
+const searchLoading = ref<boolean>(false)
 const getList = () => {
+  searchLoading.value = true
   let json = { ...searchForm.value, ...page.value }
   proxy.$api.getUser(json).then((res: any) => {
+    searchLoading.value = false
     if (res.code !== 200) return
     list.value = res.data.list
     page.value.total = res.data.total
@@ -248,6 +251,19 @@ const statusChange = (val: any, row: any) => {
     closeOnClickModal: false
   })
     .then(() => {
+      // submitLoading.value = true
+      // proxy.$api.userEdit(row).then((res: any) => {
+      //   submitLoading.value = false
+      //   if (res.code !== 200) {
+      //     val ? (row.status = 0) : (row.status = 1)
+      //     return
+      //   }
+      //   ElMessage({
+      //     message: `${val ? '[' + row.userName + '] ' + '已停用' : '[' + row.userName + '] ' + '已启用'} `,
+      //     type: 'success',
+      //     duration: 3 * 1000
+      //   })
+      // })
       ElMessage({
         message: `${val ? '[' + row.username + '] ' + '已启用' : '[' + row.username + '] ' + '已停用'} `,
         type: 'success',
@@ -337,7 +353,7 @@ const editRow = (row: any) => {
   getAllRole()
   let rowData = JSON.parse(JSON.stringify(row))
   dialogForm.value = rowData
-  fileList.value = [{ url: rowData.avatar }]
+  if (rowData.avatar) fileList.value = [{ url: rowData.avatar }]
 }
 
 // 删除
@@ -347,16 +363,56 @@ const deleteRow = (row: any) => {
     draggable: true,
     closeOnClickModal: false
   })
-    .then(() => {})
+    .then(() => {
+      // proxy.$api.userDel(row.id).then((res: any) => {
+      //   if (res.code !== 200) return
+      //   getList()
+      //   ElMessage({
+      //     message: '删除成功',
+      //     type: 'success'
+      //   })
+      // })
+    })
     .catch(() => {
       // catch error
     })
 }
 
 // 确定
+const formRef = ref(null)
+const submitLoading = ref<boolean>(false)
 const submit = () => {
-  showForm.value = false
-  console.log(dialogForm.value)
+  formRef.value.validate((valid: any) => {
+    if (valid) {
+      // submitLoading.value = true
+      if (dialogForm.value.id) {
+        // proxy.$api.userEdit(dialogForm.value).then((res: any) => {
+        //   submitLoading.value = false
+        //   showForm.value = false
+        //   if (res.code !== 200) return
+        //   getList()
+        //   ElMessage({
+        //     message: '编辑成功',
+        //     type: 'success'
+        //   })
+        // })
+      } else {
+        // proxy.$api.userAdd(dialogForm.value).then((res: any) => {
+        //   submitLoading.value = false
+        //   showForm.value = false
+        //   if (res.code !== 200) return
+        //   getList()
+        //   ElMessage({
+        //     message: '新增成功',
+        //     type: 'success'
+        //   })
+        // })
+      }
+
+      showForm.value = false
+      console.log(dialogForm.value)
+    }
+  })
 }
 </script>
 

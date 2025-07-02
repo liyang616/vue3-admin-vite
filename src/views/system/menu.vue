@@ -5,7 +5,7 @@
         <el-input v-model="searchForm.title" placeholder="请输入菜单名称" clearable />
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" :icon="Search" @click="getList">搜索</el-button>
+        <el-button type="primary" :icon="Search" :loading="searchLoading" @click="getList">搜索</el-button>
         <el-button type="primary" v-auth="'btn_add'" @click="addRow(0)">新增</el-button>
       </el-form-item>
     </el-form>
@@ -378,7 +378,7 @@
       <template #footer>
         <div class="dialog-footer">
           <el-button @click="showForm = false">取消</el-button>
-          <el-button type="primary" @click="submit"> 确定 </el-button>
+          <el-button type="primary" :loading="submitLoading" @click="submit"> 确定 </el-button>
         </div>
       </template>
     </el-dialog>
@@ -438,8 +438,11 @@ const buildTreeData = (data: any) => {
 }
 
 // 获取数据
+const searchLoading = ref<boolean>(false)
 const getList = () => {
+  searchLoading.value = true
   proxy.$api.getMenu().then((res: any) => {
+    searchLoading.value = false
     if (res.code !== 200) return
     listData.value = res.data
     // 初始化树形数据
@@ -503,6 +506,7 @@ const closeForm = () => {
 
 // 重置表单
 const resetForm = () => {
+  if (dialogForm.value.id) delete dialogForm.value.id
   // dialogForm.value.parentId = 0 // 父节点id
   // dialogForm.value.menuType = 0 // 菜单类型（0代表菜单、1代表iframe、2代表外链、3代表按钮）
   dialogForm.value.title = '' // 菜单名称
@@ -558,7 +562,16 @@ const deleteRow = (row: any) => {
       closeOnClickModal: false
     }
   )
-    .then(() => {})
+    .then(() => {
+      // proxy.$api.menuDel(row.id).then((res: any) => {
+      //   if (res.code !== 200) return
+      //   getList()
+      //   ElMessage({
+      //     message: '删除成功',
+      //     type: 'success'
+      //   })
+      // })
+    })
     .catch(() => {
       // catch error
     })
@@ -580,17 +593,53 @@ const parentIdChange = () => {
       .path.split('/')
       .join(':')
       .replace(/^:/, '')
-    if (dialogForm.value.auths) dialogForm.value.auths = dialogForm.value.auths + ':'
+    if (dialogForm.value.auths) dialogForm.value.auths = dialogForm.value.auths + ':btn_'
   }
 }
 
 // 确定
+const formRef = ref(null)
+const submitLoading = ref<boolean>(false)
 const submit = () => {
-  showForm.value = false
-  if (!dialogForm.value.parentId) dialogForm.value.parentId = 0
+  formRef.value.validate((valid: any) => {
+    if (valid) {
+      submitLoading.value = true
+      if (!dialogForm.value.parentId) dialogForm.value.parentId = 0
+      if (Array.isArray(dialogForm.value.parentId))
+        dialogForm.value.parentId = dialogForm.value.parentId[dialogForm.value.parentId.length - 1]
 
-  delete dialogForm.value.children
-  console.log(dialogForm.value)
+      delete dialogForm.value.children
+      if (!dialogForm.value.enterTransition) dialogForm.value.enterTransition = ''
+      if (!dialogForm.value.leaveTransition) dialogForm.value.leaveTransition = ''
+
+      if (dialogForm.value.id) {
+        // proxy.$api.menuEdit(dialogForm.value).then((res: any) => {
+        //   showForm.value = false
+        //   submitLoading.value = false
+        //   if (res.code !== 200) return
+        //   getList()
+        //   ElMessage({
+        //     message: '编辑成功',
+        //     type: 'success'
+        //   })
+        // })
+      } else {
+        // proxy.$api.menuAdd(dialogForm.value).then((res: any) => {
+        //   showForm.value = false
+        //   submitLoading.value = false
+        //   if (res.code !== 200) return
+        //   getList()
+        //   ElMessage({
+        //     message: '新增成功',
+        //     type: 'success'
+        //   })
+        // })
+      }
+      submitLoading.value = false
+      showForm.value = false
+      console.log(dialogForm.value)
+    }
+  })
 }
 </script>
 

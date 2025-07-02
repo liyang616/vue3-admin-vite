@@ -75,7 +75,10 @@ export const useUserStore = defineStore({
       removeToken()
       useMultiTagsStoreHook().handleTags('equal', [...routerArrays])
       resetRouter()
-      router.push('/login')
+      router.push('/login').then(() => {
+        // 动态路由退出到登录页面时进行刷新，解决切换不同权限账号layout布局消失、和登录后页面出现403、404问题
+        location.reload()
+      })
     }
   }
 })

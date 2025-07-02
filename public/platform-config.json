@@ -6,7 +6,7 @@
   "MultiTagsCache": false,
   "KeepAlive": true,
   "Layout": "vertical",
-  "Theme": "light",
+  "Theme": "default",
   "DarkMode": false,
   "OverallStyle": "light",
   "watermark": false,

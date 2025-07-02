@@ -2,6 +2,8 @@ import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
 import Cookies from 'js-cookie'
 import router from '@/router'
 import NProgress from './progress'
+import { useUserStoreHook } from '@/store/modules/user'
+import { TokenKey } from '@/utils/auth'
 
 class HttpRequest {
   private readonly baseUrl: string
@@ -31,9 +33,9 @@ class HttpRequest {
         NProgress.start()
 
         // 请求头携带token
-        const token: string | undefined = Cookies.get('authorized-token')
+        const token: string | undefined = Cookies.get(TokenKey)
         if (token) {
-          config.headers['authorized-token'] = token
+          config.headers[TokenKey] = token
         }
 
         // 上传接口使用multipart/form-data
@@ -60,14 +62,15 @@ class HttpRequest {
         const { data } = res
 
         // 登录失效
-        if (data.status == 2001) {
+        if (data.code == 401) {
           ElMessageBox.confirm('登录失效，请重新登入', '提示', {
             confirmButtonText: '重新登录',
             cancelButtonText: '取消',
             type: 'warning'
           })
             .then(() => {
-              location.reload()
+              // 重新登录
+              useUserStoreHook().logOut()
             })
             .catch(() => {})
           return

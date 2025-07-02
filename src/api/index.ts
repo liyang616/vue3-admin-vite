@@ -2,6 +2,13 @@ import { App } from 'vue'
 import http from '@/utils/request'
 
 const Api = {
+  getCaptcha(params?: any) {
+    return http.request({
+      url: '/captchaImage',
+      method: 'get',
+      params
+    })
+  },
   getLogin(data?: any) {
     return http.request({
       url: '/login',
